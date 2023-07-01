@@ -27,9 +27,7 @@ class _HomeState extends State<Home> {
               child: Responsive(
                 desktop: WebPage(),
                 mobile: Expanded(
-                  //Versão mobile
-                  flex: 5,
-                  child: Text("Mobile"),
+                  child: WebPage(),
                 ),
               ),
             ),
