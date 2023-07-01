@@ -6,7 +6,7 @@ import 'package:sorveteria/src/core/responsive.dart';
 import 'controllers/app_controller.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -22,14 +22,20 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Versão desktop
-            if (Responsive.isDesktop(context))
-              Expanded(
-                child: Container(),
-              ),
+
             Expanded(
-              //Versão mobile
-              flex: 5,
-              child: Container(),
+              child: Responsive(
+                desktop: Container(
+                  child: Text("Desktop"),
+                ),
+                mobile: Expanded(
+                  //Versão mobile
+                  flex: 5,
+                  child: Container(
+                    child: Text("Mobile"),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
