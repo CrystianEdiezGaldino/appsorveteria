@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sorveteria/src/core/responsive.dart';
 
+import '../app/web/pages/web_page.dart';
 import 'controllers/app_controller.dart';
 
 class Home extends StatefulWidget {
@@ -22,18 +23,13 @@ class _HomeState extends State<Home> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Versão desktop
-
             Expanded(
               child: Responsive(
-                desktop: Container(
-                  child: Text("Desktop"),
-                ),
+                desktop: WebPage(),
                 mobile: Expanded(
                   //Versão mobile
                   flex: 5,
-                  child: Container(
-                    child: Text("Mobile"),
-                  ),
+                  child: Text("Mobile"),
                 ),
               ),
             ),
