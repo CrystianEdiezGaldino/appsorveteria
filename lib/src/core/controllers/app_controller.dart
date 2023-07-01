@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../app/web/pages/products_page.dart';
 import '../../app/web/product_model.dart';
 
 class AppController extends ChangeNotifier {
@@ -10,12 +9,8 @@ class AppController extends ChangeNotifier {
   bool showpage = false;
   List<Product> cartProducts = [];
 
-  // Propriedades para armazenar os valores dos campos de entrada
-  String nome = '';
-  String endereco = '';
-  String numero = '';
-  String complemento = '';
-  String celular = '';
+  // Mapa para armazenar os valores dos campos de entrada por ID
+  Map<String, FormValues> formValues = {};
 
   void controlMenu() {
     if (!_scaffoldKey.currentState!.isDrawerOpen) {
@@ -28,29 +23,29 @@ class AppController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Métodos para atualizar os valores dos campos de entrada
-  void setNome(String value) {
-    nome = value;
+  // Métodos para atualizar os valores dos campos de entrada por ID
+  void setNome(String userId, String value) {
+    _getFormValues(userId).nome = value;
     notifyListeners();
   }
 
-  void setEndereco(String value) {
-    endereco = value;
+  void setEndereco(String userId, String value) {
+    _getFormValues(userId).endereco = value;
     notifyListeners();
   }
 
-  void setNumero(String value) {
-    numero = value;
+  void setNumero(String userId, String value) {
+    _getFormValues(userId).numero = value;
     notifyListeners();
   }
 
-  void setComplemento(String value) {
-    complemento = value;
+  void setComplemento(String userId, String value) {
+    _getFormValues(userId).complemento = value;
     notifyListeners();
   }
 
-  void setCelular(String value) {
-    celular = value;
+  void setCelular(String userId, String value) {
+    _getFormValues(userId).celular = value;
     notifyListeners();
   }
 
@@ -64,4 +59,21 @@ class AppController extends ChangeNotifier {
     cartProducts.remove(product);
     notifyListeners();
   }
+
+  FormValues _getFormValues(String userId) {
+    if (!formValues.containsKey(userId)) {
+      formValues[userId] = FormValues();
+    }
+    print(formValues[userId]);
+    notifyListeners();
+    return formValues[userId]!;
+  }
+}
+
+class FormValues {
+  String nome = '';
+  String endereco = '';
+  String numero = '';
+  String complemento = '';
+  String celular = '';
 }
