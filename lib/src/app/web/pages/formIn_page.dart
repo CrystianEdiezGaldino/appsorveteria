@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sorveteria/src/app/web/pages/products_page.dart';
@@ -8,6 +10,7 @@ class FormInPage extends StatefulWidget {
   const FormInPage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _FormInPageState createState() => _FormInPageState();
 }
 
@@ -49,7 +52,7 @@ class _FormInPageState extends State<FormInPage> {
                   TextField(
                     controller: enderecoController,
                     decoration: const InputDecoration(
-                      labelText: 'Endereço',
+                      labelText: 'Endereï¿½o',
                     ),
                     onChanged: (value) {
                       appController.setEndereco(userId, value);
@@ -59,7 +62,7 @@ class _FormInPageState extends State<FormInPage> {
                   TextField(
                     controller: numeroController,
                     decoration: const InputDecoration(
-                      labelText: 'Número',
+                      labelText: 'Nï¿½mero',
                     ),
                     onChanged: (value) {
                       appController.setNumero(userId, value);
@@ -78,14 +81,14 @@ class _FormInPageState extends State<FormInPage> {
                   const SizedBox(height: 10),
                   TextField(
                     controller: celularController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Celular',
                     ),
                     onChanged: (value) {
                       appController.setCelular(userId, value);
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       String userId = 'P${formCounter.toString().padLeft(6, '0')}';
@@ -101,10 +104,10 @@ class _FormInPageState extends State<FormInPage> {
 
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ProductListPage()),
+                        MaterialPageRoute(builder: (context) => ProductListPage(idPedido: userId,)),
                       );
                     },
-                    child: Text('Iniciar Pedido'),
+                    child: const Text('Iniciar Pedido'),
                   ),
                 ],
               ),

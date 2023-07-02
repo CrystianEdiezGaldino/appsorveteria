@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -18,11 +20,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: context.read<AppController>().scaffoldKey,
-      body: SafeArea(
+      body: const SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Versão desktop
+            // Versï¿½o desktop
             Expanded(
               child: Responsive(
                 desktop: WebPage(),

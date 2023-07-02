@@ -1,38 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sorveteria/src/app/web/pages/paymentPage.dart';
 
 import '../../../core/controllers/app_controller.dart';
 import '../../widgets/btappbar_widget.dart';
-import '../product_model.dart';
-import 'nextpagetest.dart';
+
 
 class ProductListPage extends StatelessWidget {
-  final List<Product> products = [
-    Product(
-      image: 'path_to_image_1',
-      description: 'Descrição do produto 1',
-      value: 10.0,
-    ),
-    Product(
-      image: 'path_to_image_2',
-      description: 'Descrição do produto 2',
-      value: 20.0,
-    ),
-    // Adicione mais produtos conforme necessário
-  ];
+  final String idPedido;
+
+  const ProductListPage({super.key, required this.idPedido});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AppController>(
       builder: (context, appController, _) {
+        final formValues = appController.getFormValues(
+            idPedido); // ObtÃ©m os valores do formulÃ¡rio do AppController com base no ID do pedido
+        final nome = formValues.nome; // ObtÃ©m o nome do formulÃ¡rio
+
         return Scaffold(
           appBar: AppBar(
-            title: Text('Lista de Produtos'),
+            title: Center(
+                child: Text(
+                    nome)), // Exibe o nome do formulÃ¡rio no centro da AppBar
           ),
           body: ListView.builder(
-            itemCount: products.length,
+            itemCount: appController.products.length,
             itemBuilder: (context, index) {
-              final product = products[index];
+              final product = appController.products[index];
               return Card(
                 child: ListTile(
                   leading: Image.asset(
@@ -46,19 +42,19 @@ class ProductListPage extends StatelessWidget {
                     onPressed: () {
                       appController.addToCart(product);
                     },
-                    child: Text('+'),
+                    child: const Text('+'),
                   ),
                 ),
               );
             },
           ),
           bottomNavigationBar: CustomBottomAppBar(
-            cartItemCount: appController.cartProducts.length,
             onAdvance: () {
-              // Lógica para avançar
+              // LÃ³gica para avanÃ§ar
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NextPage()),
+                MaterialPageRoute(
+                    builder: (context) => PaymentPage(idPedido: idPedido)),
               );
             },
           ),

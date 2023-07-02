@@ -1,30 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../core/controllers/app_controller.dart';
+
+import 'cartModal_widget.dart';
 
 class CustomBottomAppBar extends StatelessWidget {
-  final int cartItemCount;
   final VoidCallback onAdvance;
 
-  const CustomBottomAppBar({
-    required this.cartItemCount,
+  const CustomBottomAppBar({super.key, 
     required this.onAdvance,
   });
 
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      child: Container(
+      child: SizedBox(
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Itens no Carrinho: $cartItemCount'),
+            GestureDetector(
+              onTap: () => _showCartModal(context),
+              child: Consumer<AppController>(
+                builder: (context, appController, _) {
+                  return Text('Itens no Carrinho: ${appController.cartProducts.length}');
+                },
+              ),
+            ),
             ElevatedButton(
               onPressed: onAdvance,
-              child: Text('Avançar'),
+              child: const Text('AvanÃ§ar'),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showCartModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return const CartModal();
+      },
     );
   }
 }
