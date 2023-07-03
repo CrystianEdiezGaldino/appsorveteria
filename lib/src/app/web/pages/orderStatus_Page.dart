@@ -31,9 +31,7 @@ final String changeAmount = appController.changeAmount;
 try {
   await FirebaseFirestore.instance
   .collection('pedidos')
-  .doc("doc_id")
-  .collection('messages')
-  .doc("msg_id")
+  .doc(widget.idPedido)
   .set({
     'nome': formValues.nome,
     'endereco': formValues.endereco,

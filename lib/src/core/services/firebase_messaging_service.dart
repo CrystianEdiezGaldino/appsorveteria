@@ -16,7 +16,7 @@ class FirebaseMessagingService {
       sound: true,
       alert: true,
     );
-    getDeviceFirebaseToken();
+    // getDeviceFirebaseToken();
     _onMessage();
     _onMessageOpenedApp();
   }

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/controllers/app_controller.dart';
 
-import 'orderStatusPage.dart';
+import 'orderStatus_Page.dart';
 
 class PaymentPage extends StatelessWidget {
   final String idPedido;

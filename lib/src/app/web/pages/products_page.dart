@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sorveteria/src/app/web/pages/paymentPage.dart';
+import 'package:sorveteria/src/app/web/pages/payment_Page.dart';
 
 import '../../../core/controllers/app_controller.dart';
 import '../../widgets/btappbar_widget.dart';
