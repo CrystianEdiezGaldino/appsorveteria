@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "appsorveteria",
+            "cwd": "appsorveteria",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "appsorveteria (profile mode)",
+            "cwd": "appsorveteria",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "appsorveteria (release mode)",
+            "cwd": "appsorveteria",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
