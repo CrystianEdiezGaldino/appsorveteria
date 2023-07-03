@@ -6,18 +6,22 @@ import 'package:provider/provider.dart';
 
 import '../../../core/controllers/app_controller.dart';
 
+import 'formIn_page.dart';
 import 'orderStatus_Page.dart';
 
 class PaymentPage extends StatelessWidget {
-  final String idPedido;
-
-  const PaymentPage({Key? key, required this.idPedido}) : super(key: key);
+  const PaymentPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final appController = Provider.of<AppController>(context);
+    String idPedido = '';
+    final formValues = appController.getFormValues(appController.idPedido);
     return Consumer<AppController>(
       builder: (context, appController, _) {
-        final formValues = appController.getFormValues(idPedido);
+        final formValues = appController.getFormValues(appController.idPedido);
         final cartProducts = appController.cartProducts;
 
         return Scaffold(
@@ -29,6 +33,10 @@ class PaymentPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                FormInPage(),
+                SizedBox(
+                  height: 25.0,
+                ),
                 const Text(
                   'Dados do Pedido',
                   style: TextStyle(
@@ -72,9 +80,55 @@ class PaymentPage extends StatelessWidget {
                     itemCount: cartProducts.length,
                     itemBuilder: (context, index) {
                       final product = cartProducts[index];
-                      return ListTile(
-                        title: Text(product.descricao!),
-                        subtitle: Text('Price: \$${product.valor}'),
+                      final descricao =
+                          product.descricao ?? 'Descrição não disponível';
+                      final valor = product.valor ?? 'Valor não disponível';
+                      final imagem = product.image; // URL da imagem
+
+                      return FutureBuilder(
+                        future: Future.delayed(Duration(
+                            seconds: 2)), // Simulando tempo de carregamento
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            // Indicador de progresso circular enquanto aguarda o carregamento
+                            return ListTile(
+                              leading: CircularProgressIndicator(),
+                              title: Text(descricao),
+                              subtitle: Text('Price: \$${valor}'),
+                            );
+                          } else if (snapshot.hasError) {
+                            // Tratamento de erro em caso de falha no carregamento
+                            return ListTile(
+                              title: Text('Erro ao carregar o item'),
+                            );
+                          } else {
+                            // Conteúdo do ListTile após o carregamento
+                            return ListTile(
+                              leading: imagem != null
+                                  ? Image.network(
+                                      imagem,
+                                      width: 50,
+                                      height: 50,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return CircularProgressIndicator();
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Icon(Icons
+                                            .error); // Ícone de erro em caso de falha ao carregar a imagem
+                                      },
+                                    )
+                                  : Icon(Icons
+                                      .image), // Ícone padrão caso a imagem não esteja disponível
+                              title: Text(descricao),
+                              subtitle: Text('Price: \$${valor}'),
+                            );
+                          }
+                        },
                       );
                     },
                   ),
@@ -121,9 +175,11 @@ class PaymentPage extends StatelessWidget {
                     activeColor: Colors.blue,
                   ),
                 ),
-                if (appController.getSelectedPaymentMethod() == PaymentMethod.cash)
+                if (appController.getSelectedPaymentMethod() ==
+                    PaymentMethod.cash)
                   TextFormField(
-                    decoration: const InputDecoration(labelText: 'Valor do Troco'),
+                    decoration:
+                        const InputDecoration(labelText: 'Valor do Troco'),
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       appController.setChangeAmount(value);
@@ -135,7 +191,10 @@ class PaymentPage extends StatelessWidget {
                     // Lógica para finalizar o pedido
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => StatusPedidoPage(idPedido: idPedido,)),
+                      MaterialPageRoute(
+                          builder: (context) => StatusPedidoPage(
+                                idPedido: appController.idPedido,
+                              )),
                     );
                   },
                   child: const Text('Finalizar Pedido'),
