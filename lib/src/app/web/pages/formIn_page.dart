@@ -1,6 +1,8 @@
-// ignore_for_file: file_names
+// ignore: file_names
+// ignore_for_file: file_names, duplicate_ignore
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sorveteria/src/app/web/pages/products_page.dart';
 
@@ -91,20 +93,33 @@ class _FormInPageState extends State<FormInPage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      String userId = 'P${formCounter.toString().padLeft(6, '0')}';
-                      final appController = Provider.of<AppController>(context, listen: false);
+                      String userId =
+                          'P${formCounter.toString().padLeft(6, '0')}';
+                      final now = DateTime.now();
+                      final formattedDate =
+                          DateFormat('yyyyMMdd-HHmm').format(now);
+                      final celular = celularController.text;
+                      userId = '$celular-$formattedDate-$userId';
+
+                      final appController =
+                          Provider.of<AppController>(context, listen: false);
 
                       appController.setNome(userId, nomeController.text);
-                      appController.setEndereco(userId, enderecoController.text);
+                      appController.setEndereco(
+                          userId, enderecoController.text);
                       appController.setNumero(userId, numeroController.text);
-                      appController.setComplemento(userId, complementoController.text);
+                      appController.setComplemento(
+                          userId, complementoController.text);
                       appController.setCelular(userId, celularController.text);
 
                       formCounter++;
 
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ProductListPage(idPedido: userId,)),
+                        MaterialPageRoute(
+                            builder: (context) => ProductListPage(
+                                  idPedido: userId,
+                                )),
                       );
                     },
                     child: const Text('Iniciar Pedido'),

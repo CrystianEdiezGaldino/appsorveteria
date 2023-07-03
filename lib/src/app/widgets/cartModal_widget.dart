@@ -34,12 +34,12 @@ class CartModal extends StatelessWidget {
                   final product = appController.cartProducts[index];
                   return ListTile(
                     leading: Image.asset(
-                      product.image,
+                      product.image!,
                       width: 50,
                       height: 50,
                     ),
-                    title: Text(product.description),
-                    subtitle: Text('\$${product.value.toStringAsFixed(2)}'),
+                    title: Text(product.descricao!),
+                    subtitle: Text(product.valor!),
                     trailing: GestureDetector(
                       onTap: () {
                         appController.removeFromCart(product);

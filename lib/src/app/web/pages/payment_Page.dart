@@ -73,8 +73,8 @@ class PaymentPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final product = cartProducts[index];
                       return ListTile(
-                        title: Text(product.description),
-                        subtitle: Text('Price: \$${product.value}'),
+                        title: Text(product.descricao!),
+                        subtitle: Text('Price: \$${product.valor}'),
                       );
                     },
                   ),

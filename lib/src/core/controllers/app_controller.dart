@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../app/web/product_model.dart';
+import '../services/list_produtos.dart';
 
 class AppController extends ChangeNotifier {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+   ProductService productService = ProductService();
 
   GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
   PaymentMethod initialPaymentMethod = PaymentMethod.creditCard;
   bool showpage = false;
   List<Product> cartProducts = [];
-  List<Product> products = [
-    Product(
-      image: 'svt01.jpg',
-      description: 'Descrição do produto 1',
-      value: 10.0,
-    ),
-    Product(
-      image: 'svt02.jpg',
-      description: 'Descrição do produto 2',
-      value: 20.0,
-    ),
-    // Adicione mais produtos conforme necessário
-  ];
+  
 
   // Mapa para armazenar os valores dos campos de entrada por ID
   Map<String, FormValues> formValues = {};
@@ -43,6 +33,13 @@ class AppController extends ChangeNotifier {
       _scaffoldKey.currentState!.openDrawer();
     }
   }
+void initProductService(Function(List<Product>) callback) {
+  productService.fetchProductsFromFirebase();
+  productService.addListener(() {
+    callback(productService.products);
+    notifyListeners();
+  });
+}
 
   void showPage() {
     showpage = !showpage;

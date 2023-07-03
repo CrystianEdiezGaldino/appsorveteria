@@ -1,7 +1,10 @@
+// ignore_for_file: unused_import, file_names, library_private_types_in_public_api, await_only_futures
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sorveteria/src/app/web/pages/formIn_page.dart';
+import 'package:sorveteria/src/core/Home.dart';
 
 
 import '../../../core/controllers/app_controller.dart';
@@ -24,7 +27,7 @@ sendOrderData(); // Envie os dados do pedido assim que a página for carregada
 
 Future<void> sendOrderData() async {
 final appController = Provider.of<AppController>(context, listen: false);
-final formValues = appController.getFormValues(widget.idPedido);
+final formValues =await appController.getFormValues(widget.idPedido);
 final cartProducts = appController.cartProducts;
 final PaymentMethod paymentMethod = appController.getSelectedPaymentMethod();
 final String changeAmount = appController.changeAmount;
@@ -39,15 +42,18 @@ try {
     'complemento': formValues.complemento,
     'celular': formValues.celular,
     'produtos': cartProducts.map((product) => {
-      'descricao': product.description,
-      'valor': product.value,
+       'id_produto': '123',
+      'descricao': product.descricao,
+      'valor': product.valor,
     }).toList(),
     'formaPagamento': paymentMethod.toString().split('.').last,
     'troco': changeAmount,
   });
 
+  // ignore: avoid_print
   print('Dados do pedido enviados com sucesso!');
 } catch (error) {
+  // ignore: avoid_print
   print('Erro ao enviar os dados do pedido: $error');
 }
 }
@@ -62,7 +68,7 @@ final PaymentMethod paymentMethod = appController.getSelectedPaymentMethod();
 final String changeAmount = appController.changeAmount;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Status do Pedido'),
+        title: const Text('Status do Pedido'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -84,48 +90,48 @@ final String changeAmount = appController.changeAmount;
                   state: appController.orderStatus.indexOf(status) < appController.currentStep
                       ? StepState.complete
                       : StepState.indexed,
-                  content: SizedBox.shrink(),
+                  content: const SizedBox.shrink(),
                 );
               }).toList(),
             ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Dados do Pedido',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Nome: ${formValues.nome}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
             Text(
               'Endereço: ${formValues.endereco}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
             Text(
               'Número: ${formValues.numero}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
             Text(
               'Complemento: ${formValues.complemento}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
             Text(
               'Celular: ${formValues.celular}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Produtos',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -133,31 +139,31 @@ final String changeAmount = appController.changeAmount;
                 itemBuilder: (context, index) {
                   final product = cartProducts[index];
                   return ListTile(
-                    title: Text(product.description),
-                    subtitle: Text('Price: \$${product.value}'),
+                    title: Text(product.descricao!),
+                    subtitle: Text('Price: \$${product.valor}'),
                   );
                 },
               ),
             ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Forma de Pagamento',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               paymentMethod.toString().split('.').last, // Exibe apenas o nome da forma de pagamento selecionada
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
             if (paymentMethod == PaymentMethod.cash)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 16),
-                  Text(
+                  const SizedBox(height: 16),
+                  const Text(
                     'Valor do Troco',
                     style: TextStyle(
                       fontSize: 16,
@@ -166,16 +172,16 @@ final String changeAmount = appController.changeAmount;
                   ),
                   Text(
                     'R\$ $changeAmount',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
-            Spacer(),
+            const Spacer(),
             FutureBuilder(
-              future: Future.delayed(Duration(seconds: 4)),
+              future: Future.delayed(const Duration(seconds: 4)),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return ElevatedButton(
+                  return const ElevatedButton(
                     onPressed: null,
                     child: Text('Pedido Recebido'),
                   );
@@ -184,10 +190,10 @@ final String changeAmount = appController.changeAmount;
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const FormInPage()),
+                        MaterialPageRoute(builder: (context) => const Home()),
                       );
                     },
-                    child: Text('Pedido Recebido'),
+                    child: const Text('Pedido Recebido'),
                   );
                 }
               },
