@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sorveteria/src/app/web/pages/productForm_Page.dart';
+import 'package:sorveteria/src/app/web/pages/products_page.dart';
 import 'package:sorveteria/src/core/Home.dart';
 import 'package:sorveteria/src/core/constants.dart';
 import 'package:sorveteria/src/core/controllers/app_controller.dart';
@@ -68,7 +69,7 @@ class MyApp extends StatelessWidget {
               .apply(bodyColor: Colors.white),
           canvasColor: secondaryColor,
         ),
-        home:  Home(),
+        home:  const ProductListPage(),
       ),
     );
   }

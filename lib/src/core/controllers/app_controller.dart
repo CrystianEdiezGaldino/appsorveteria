@@ -1,4 +1,7 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../app/web/product_model.dart';
 import '../services/list_produtos.dart';
 
@@ -10,6 +13,7 @@ class AppController extends ChangeNotifier {
   PaymentMethod initialPaymentMethod = PaymentMethod.creditCard;
   bool showpage = false;
   List<Product> cartProducts = [];
+  String idPedido ='';
   
 
   // Mapa para armazenar os valores dos campos de entrada por ID
@@ -51,6 +55,11 @@ void initProductService(Function(List<Product>) callback) {
     getFormValues(userId).nome = value;
     notifyListeners();
   }
+   void setIdPeido(String idpeido) {
+    idPedido = idpeido;
+    notifyListeners();
+  }
+
 
   void setEndereco(String userId, String value) {
     getFormValues(userId).endereco = value;
@@ -101,6 +110,10 @@ void initProductService(Function(List<Product>) callback) {
     changeAmount = amount;
     notifyListeners();
   }
+  int getCartItemCount(Product product) {
+  final appController = Provider.of<AppController>(context as BuildContext, listen: false);
+  return appController.cartProducts.where((item) => item == product).length;
+}
 
   // Novo método para obter a forma de pagamento selecionada
   PaymentMethod getSelectedPaymentMethod() {

@@ -177,6 +177,7 @@ final String changeAmount = appController.changeAmount;
                 ],
               ),
             const Spacer(),
+           
             FutureBuilder(
               future: Future.delayed(const Duration(seconds: 4)),
               builder: (context, snapshot) {

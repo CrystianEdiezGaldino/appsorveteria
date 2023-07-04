@@ -8,9 +8,7 @@ import 'cartModal_widget.dart';
 class CustomBottomAppBar extends StatelessWidget {
   final VoidCallback onAdvance;
 
-  const CustomBottomAppBar({super.key, 
-    required this.onAdvance,
-  });
+  const CustomBottomAppBar({Key? key, required this.onAdvance});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,22 @@ class CustomBottomAppBar extends StatelessWidget {
               onTap: () => _showCartModal(context),
               child: Consumer<AppController>(
                 builder: (context, appController, _) {
-                  return Text('Itens no Carrinho: ${appController.cartProducts.length}');
+                  return Row(
+                    children: [
+                      const Icon(
+                        Icons.shopping_cart,
+                        color: Colors.blue,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Itens no Carrinho: ${appController.cartProducts.length}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  );
                 },
               ),
             ),
