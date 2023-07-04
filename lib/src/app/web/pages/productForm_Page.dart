@@ -38,7 +38,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
     if (snapshot.docs.isNotEmpty) {
       final lastProduct = snapshot.docs.first;
       final lastProductId = lastProduct.data()['idProduto'] as String;
-      final newProductId = (int.parse(lastProductId) + 1).toString();
+      final newProductId = (int.parse(lastProductId) + 2).toString();
       return newProductId;
     }
 
