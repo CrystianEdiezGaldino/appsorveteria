@@ -1,5 +1,6 @@
 import 'dart:js';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../app/web/product_model.dart';
@@ -8,6 +9,7 @@ import '../services/list_produtos.dart';
 class AppController extends ChangeNotifier {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
    ProductService productService = ProductService();
+   
 
   GlobalKey<ScaffoldState> get scaffoldKey => _scaffoldKey;
   PaymentMethod initialPaymentMethod = PaymentMethod.creditCard;
@@ -49,6 +51,79 @@ void initProductService(Function(List<Product>) callback) {
     showpage = !showpage;
     notifyListeners();
   }
+  Future<void> fetchProducts() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('produtos_pedido')
+          .get();
+
+      productService.products = snapshot.docs
+          .map((doc) => Product.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      notifyListeners();
+    } catch (error) {
+      print('Erro ao buscar os produtos: $error');
+    }
+  }
+
+  Future<String> getLastProductId() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('produtos_pedido')
+        .orderBy('idProduto', descending: true)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final lastProduct = snapshot.docs.first;
+      final lastProductId = lastProduct.data()['idProduto'] as String;
+      final newProductId = (int.parse(lastProductId) + 1).toString();
+      return newProductId;
+    }
+
+    return '1'; // Caso não haja produtos cadastrados ainda
+  }
+
+  Future<void> createProduct(
+      String product, String imagemLink, String description, String value) async {
+    final newProductId = await getLastProductId();
+
+    final newProduct = Product(
+      idProduto: newProductId,
+      image: imagemLink,
+      descricao: description,
+      valor: value,
+      tituloproduto: product,
+    );
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('produtos_pedido')
+          .add(newProduct.toMap());
+
+      await fetchProducts(); // Atualiza a lista de produtos após a criação
+
+      notifyListeners();
+    } catch (error) {
+      print('Erro ao cadastrar o produto: $error');
+    }
+  }
+
+  Future<void> deleteProduct(String productId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('produtos_pedido')
+          .doc(productId)
+          .delete();
+
+      await fetchProducts(); // Atualiza a lista de produtos após a exclusão
+
+      notifyListeners();
+    } catch (error) {
+      print('Erro ao remover o produto: $error');
+    }
+  }
+
 
   // Métodos para atualizar os valores dos campos de entrada por ID
   void setNome(String userId, String value) {

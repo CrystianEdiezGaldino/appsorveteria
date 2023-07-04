@@ -61,6 +61,8 @@ class CartModal extends StatelessWidget {
                 final descricao =
                     product.descricao ?? 'Descrição não disponível';
                 final valor = product.valor ?? 'Valor não disponível';
+                 final tituloproduto = product.tituloproduto ?? 'Titulo não disponível';
+
 
                 return ListTile(
                   leading: product.image != null
@@ -94,18 +96,29 @@ class CartModal extends StatelessWidget {
                           size: 50,
                         ),
                   title: Text(
+                    tituloproduto,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  subtitle: Column(
+                    children: [
+                      Text(
                     descricao,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
                   ),
-                  subtitle: Text(
-                    'R\$ $valor',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
+                      Text(
+                        'R\$ $valor',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                   trailing: GestureDetector(
                     onTap: () {

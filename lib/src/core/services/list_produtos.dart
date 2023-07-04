@@ -28,10 +28,11 @@ class ProductService extends ChangeNotifier {
 
           // Crie uma instância de Product com os dados obtidos
           Product product = Product(
-            image: data['image'] ?? '',
-            descricao: data['descricao'] ?? '',
-            valor: data['valor'] ?? '',
-            idProduto: data['id_produto'] ?? '',
+            image: data['image'] ?? 'Sem imagem',
+            descricao: data['descricao'] ?? 'sem descrição',
+            valor: data['valor'] ?? 'sem valor',
+            idProduto: data['id_produto'] ?? 'sem id cadastrado', 
+            tituloproduto: data['titulo_produto'] ?? 'sem titulo cadastrado', 
           );
 
           // Adicione o produto à lista

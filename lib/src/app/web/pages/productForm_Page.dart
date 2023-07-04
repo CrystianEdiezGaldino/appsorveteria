@@ -14,6 +14,7 @@ class ProductFormPage extends StatefulWidget {
 class _ProductFormPageState extends State<ProductFormPage> {
   final _formKey = GlobalKey<FormState>();
   final _productController = TextEditingController();
+  final _imagemController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _valueController = TextEditingController();
   File? _selectedImage;
@@ -21,52 +22,60 @@ class _ProductFormPageState extends State<ProductFormPage> {
   @override
   void dispose() {
     _productController.dispose();
+    _imagemController.dispose();
     _descriptionController.dispose();
     _valueController.dispose();
     super.dispose();
   }
 
+  Future<String> getLastProductId() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('produtos_pedido')
+        .orderBy('idProduto', descending: true)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final lastProduct = snapshot.docs.first;
+      final lastProductId = lastProduct.data()['idProduto'] as String;
+      final newProductId = (int.parse(lastProductId) + 1).toString();
+      return newProductId;
+    }
+
+    return '1'; // Caso não haja produtos cadastrados ainda
+  }
+
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final String product = _productController.text;
+      final String imagemLink = _imagemController.text;
       final String description = _descriptionController.text;
       final String value = _valueController.text;
 
-      // Crie uma instância do modelo de produto com os dados do formulário
+      final newProductId = await getLastProductId();
+
       final newProduct = Product(
-        idProduto: '1', // Defina o ID do produto como desejar
-        image: 'nome_da_imagem', // Defina o nome da imagem como desejar
+        idProduto: newProductId,
+        image: imagemLink,
         descricao: description,
         valor: value,
+        tituloproduto: product,
       );
 
       try {
-        // Adicione o novo produto ao Firebase
         await FirebaseFirestore.instance
             .collection('produtos_pedido')
             .add(newProduct.toMap());
 
-        // Atualize a lista de produtos
         setState(() {});
 
-        // Limpe os campos do formulário
         _productController.clear();
         _descriptionController.clear();
         _valueController.clear();
+        _imagemController.clear();
       } catch (error) {
-        // Trate qualquer erro que ocorrer durante o envio dos dados
         print('Erro ao cadastrar o produto: $error');
       }
-    }
-  }
-
-  void _selectImage() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _selectedImage = File(pickedImage.path);
-      });
     }
   }
 
@@ -76,9 +85,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
       appBar: AppBar(
         title: const Text('Cadastro de Produto'),
       ),
-      body:
-      Responsive(
-         mobile:  Column(
+      body: Responsive(
+        mobile: Column(
           children: [
             Expanded(
               flex: 1,
@@ -120,13 +128,21 @@ class _ProductFormPageState extends State<ProductFormPage> {
                           return null;
                         },
                       ),
+                      TextFormField(
+                        controller: _imagemController,
+                        decoration: const InputDecoration(
+                          labelText: 'Link da Imagem',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, insira o Link da Imagem';
+                          }
+                          return null;
+                        },
+                      ),
                       ElevatedButton(
                         onPressed: _submitForm,
                         child: const Text('Salvar'),
-                      ),
-                      IconButton(
-                        onPressed: _selectImage,
-                        icon: Icon(Icons.image),
                       ),
                     ],
                   ),
@@ -143,20 +159,26 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   if (snapshot.hasError) {
                     return Text('Erro ao buscar os produtos');
                   }
-      
+
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
                   }
-      
+
                   final products = snapshot.data!.docs
                       .map((doc) =>
                           Product.fromMap(doc.data() as Map<String, dynamic>))
                       .toList();
-      
+
                   return ListView.builder(
                     itemCount: products.length,
                     itemBuilder: (context, index) {
                       final product = products[index];
+                      final title =
+                          product.tituloproduto ?? "Sem título cadastrado";
+                      final description =
+                          product.descricao ?? "Sem descrição cadastrada";
+                      final value = product.valor ?? "Sem valor cadastrado";
+
                       return Card(
                         child: ListTile(
                           leading: Image.network(
@@ -164,8 +186,14 @@ class _ProductFormPageState extends State<ProductFormPage> {
                             width: 50,
                             height: 50,
                           ),
-                          title: Text(product.descricao!),
-                          subtitle: Text(product.valor!),
+                          title: Text(title),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(description),
+                              Text('Valor: $value'),
+                            ],
+                          ),
                           trailing: IconButton(
                             onPressed: () async {
                               try {
@@ -187,12 +215,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
               ),
             ),
-            
           ],
         ),
-        desktop:
-       
-       Row(
+        desktop: Row(
           children: [
             Expanded(
               flex: 1,
@@ -234,13 +259,20 @@ class _ProductFormPageState extends State<ProductFormPage> {
                           return null;
                         },
                       ),
+                      TextFormField(
+                        controller: _imagemController,
+                        decoration:
+                            const InputDecoration(labelText: 'Link da Imagem'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, insira o Link da Imagem';
+                          }
+                          return null;
+                        },
+                      ),
                       ElevatedButton(
                         onPressed: _submitForm,
                         child: const Text('Salvar'),
-                      ),
-                      IconButton(
-                        onPressed: _selectImage,
-                        icon: Icon(Icons.image),
                       ),
                     ],
                   ),
@@ -257,20 +289,26 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   if (snapshot.hasError) {
                     return Text('Erro ao buscar os produtos');
                   }
-      
+
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
                   }
-      
+
                   final products = snapshot.data!.docs
                       .map((doc) =>
                           Product.fromMap(doc.data() as Map<String, dynamic>))
                       .toList();
-      
+
                   return ListView.builder(
                     itemCount: products.length,
                     itemBuilder: (context, index) {
                       final product = products[index];
+                      final title =
+                          product.tituloproduto ?? "Sem título cadastrado";
+                      final description =
+                          product.descricao ?? "Sem descrição cadastrada";
+                      final value = product.valor ?? "Sem valor cadastrado";
+
                       return Card(
                         child: ListTile(
                           leading: Image.network(
@@ -278,8 +316,14 @@ class _ProductFormPageState extends State<ProductFormPage> {
                             width: 50,
                             height: 50,
                           ),
-                          title: Text(product.descricao!),
-                          subtitle: Text(product.valor!),
+                          title: Text(title),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(description),
+                              Text('Valor: $value'),
+                            ],
+                          ),
                           trailing: IconButton(
                             onPressed: () async {
                               try {
@@ -301,7 +345,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
               ),
             ),
-            
           ],
         ),
       ),

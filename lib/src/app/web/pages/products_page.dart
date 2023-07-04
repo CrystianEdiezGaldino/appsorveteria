@@ -46,6 +46,7 @@ class _ProductListPageState extends State<ProductListPage> {
               itemBuilder: (context, index) {
                 final product = appController.productService.products[index];
                 final descricao = product.descricao ?? 'Descrição não disponível';
+                  final tituloproduto = product.tituloproduto ?? 'Titulo não disponível';
                 final valor = product.valor ?? 'Valor não disponível';
                 final imagem = product.image; // URL da imagem
 
@@ -72,8 +73,13 @@ class _ProductListPageState extends State<ProductListPage> {
                             )
                           : Icon(Icons.image, size: 50), // Ícone padrão caso a imagem não esteja disponível
                     ),
-                    title: Text(descricao, style: TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('\$${valor}', style: TextStyle(color: Colors.grey)),
+                    title: Text(tituloproduto, style: TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Column(
+                      children: [
+                        Text(descricao, style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text('\$${valor}', style: TextStyle(color: Colors.grey)),
+                      ],
+                    ),
                     trailing: ElevatedButton(
                       onPressed: () {
                         appController.addToCart(product);
