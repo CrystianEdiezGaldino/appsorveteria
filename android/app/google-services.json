@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "461451798079",
+    "project_id": "sorveteria-7d8f2",
+    "storage_bucket": "sorveteria-7d8f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461451798079:android:3fff8ec2584064ff54fa8a",
+        "android_client_info": {
+          "package_name": "com.example.sorveteria"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461451798079-t6pqpd55tteidvjjrj7jgsmik4280o5a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn5IKyU15RtaB7-uBHWXYR4jLxPROeO0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461451798079-t6pqpd55tteidvjjrj7jgsmik4280o5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
